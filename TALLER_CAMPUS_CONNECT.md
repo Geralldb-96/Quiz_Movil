@@ -2,6 +2,8 @@
 
 Este archivo reúne una propuesta de análisis, cinco wireframes y las decisiones de diseño del frontend. Revísala con tu equipo y cambia lo que no represente sus propias decisiones. Las capturas y resultados de ejecución deben obtenerse en el dispositivo que usen para la entrega.
 
+**Actualización:** los wireframes de la sección 2 son una propuesta inicial. El diseño elegido por el equipo está en `Wireframe y mockup Campus Connect.zip` y es el que implementa ahora la app. Incluye seis pantallas (acceso, inicio, horario, tareas, avisos y eventos), además del detalle. Para la explicación técnica y las diferencias de adaptación, consulta `README.md` y los comentarios de `lib/`.
+
 ## 1. Análisis del usuario
 
 **Usuario:** Valentina Gómez, estudiante universitaria de 19 años. Necesita encontrar horario, tareas, avisos y eventos con pocos pasos.
@@ -103,9 +105,9 @@ Este archivo reúne una propuesta de análisis, cinco wireframes y las decisione
 
 ## 3. Mockup y prototipo
 
-La implementación Flutter es el mockup de alta fidelidad y el prototipo navegable. Usa fondo `#F5F7FC`, texto principal `#17243A`, azul `#335CFF`, tarjetas blancas con esquinas redondeadas, Material Icons y navegación inferior con etiquetas. La tipografía es la predeterminada de Material. Las tarjetas de tareas y eventos abren el detalle. El botón de bienvenida entra al inicio.
+La implementación Flutter es el mockup de alta fidelidad y el prototipo navegable basado en el ZIP elegido. Usa fondo `#F4F5FA`, texto principal `#1A1A2E`, morado `#5B4FE8`, tarjetas blancas con esquinas redondeadas, Material Icons y navegación inferior con cinco etiquetas. La tipografía es la predeterminada de Flutter porque el ZIP no incluye archivos de fuentes. Las tarjetas de tareas, avisos y eventos abren el detalle. El botón de acceso simulado entra al inicio.
 
-Para mostrar las cinco pantallas, ejecuta la app y captura bienvenida, inicio, horario, tareas, eventos y detalle. Comprueba cómo se ve en teléfono y tablet.
+Para mostrar las pantallas, ejecuta la app y captura acceso, inicio, horario, tareas, avisos, eventos y detalle. Comprueba cómo se ve en teléfono y tablet.
 
 ## 4. Uso de IA para registrar y revisar
 
