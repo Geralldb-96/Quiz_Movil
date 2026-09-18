@@ -95,3 +95,9 @@ Algunos controles del prototipo solo cambiaban de apariencia o mostraban datos r
 - `flutter run -d HA1ZRSGA --no-resident`: compiló, instaló y abrió la aplicación en la tablet Android `TB330FU`.
 
 Estas pruebas comprueban el frontend implementado. Para el taller todavía conviene recorrer manualmente todas las pantallas y guardar capturas de la ejecución en el dispositivo.
+
+## Capturas de la app en tablet
+
+Las siete capturas reales de la tablet Android están en [evidencias](evidencias/README.md): acceso, inicio, horario, tareas, avisos, eventos y detalle. Abre una imagen desde esa carpeta para verla o descargarla.
+
+![Inicio de Campus Connect en tablet](evidencias/02_inicio_tablet.png)
