@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
+// Punto de entrada de Flutter. runApp coloca el widget raíz en la pantalla.
 void main() => runApp(const CampusConnectApp());
 
+// Colores compartidos: cambiar estos valores actualiza la identidad visual
+// de todas las pantallas que los utilizan.
 const ink = Color(0xFF17243A);
 const blue = Color(0xFF335CFF);
 const pale = Color(0xFFF5F7FC);
 
+/// Configura la aplicación completa: nombre, tema y primera pantalla.
+/// StatelessWidget es suficiente porque esta configuración no cambia al navegar.
 class CampusConnectApp extends StatelessWidget {
   const CampusConnectApp({super.key});
 
@@ -24,10 +29,12 @@ class CampusConnectApp extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           ),
         ),
+        // La app siempre empieza en la bienvenida; todavía no hay sesión real.
         home: const WelcomePage(),
       );
 }
 
+/// Pantalla de entrada simulada. No solicita usuario ni contraseña.
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
@@ -35,6 +42,8 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
           child: Center(
+            // Limita el ancho para que el contenido también se vea cómodo
+            // en una tablet, en lugar de estirarse por toda la pantalla.
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 430),
               child: Padding(
@@ -52,6 +61,8 @@ class WelcomePage extends StatelessWidget {
                         style: TextStyle(fontSize: 17, color: Colors.black54)),
                     const SizedBox(height: 48),
                     FilledButton(
+                      // pushReplacement sustituye la bienvenida en la pila.
+                      // Así, al pulsar Atrás desde el inicio no vuelve al acceso.
                       onPressed: () => Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (_) => const CampusShell()),
                       ),
@@ -72,6 +83,8 @@ class WelcomePage extends StatelessWidget {
       );
 }
 
+/// Contenedor de las cuatro secciones principales y su barra inferior.
+/// Es StatefulWidget porque debe recordar cuál pestaña está seleccionada.
 class CampusShell extends StatefulWidget {
   const CampusShell({super.key});
 
@@ -80,10 +93,13 @@ class CampusShell extends StatefulWidget {
 }
 
 class _CampusShellState extends State<CampusShell> {
+  // Índices de la barra: 0 Inicio, 1 Horario, 2 Tareas, 3 Eventos.
   int selected = 0;
 
   @override
   Widget build(BuildContext context) {
+    // El orden debe coincidir con el orden de NavigationDestination.
+    // El inicio recibe una función para abrir otras pestañas directamente.
     final pages = <Widget>[
       DashboardPage(onNavigate: (index) => setState(() => selected = index)),
       const SchedulePage(),
@@ -91,9 +107,11 @@ class _CampusShellState extends State<CampusShell> {
       const EventsPage(),
     ];
     return Scaffold(
+      // Se muestra únicamente la página que corresponde al índice elegido.
       body: SafeArea(child: pages[selected]),
       bottomNavigationBar: NavigationBar(
         selectedIndex: selected,
+        // setState informa a Flutter que debe reconstruir el contenido.
         onDestinationSelected: (index) => setState(() => selected = index),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Inicio'),
@@ -106,6 +124,8 @@ class _CampusShellState extends State<CampusShell> {
   }
 }
 
+/// Estructura reutilizable para las páginas con título y contenido desplazable.
+/// ListView evita desbordamientos cuando hay muchas tarjetas o poco espacio.
 class PageBody extends StatelessWidget {
   const PageBody({super.key, required this.title, required this.children, this.subtitle});
   final String title;
@@ -120,11 +140,14 @@ class PageBody extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
             children: [
               Text(title, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: ink)),
+              // El subtítulo es opcional. Los tres puntos insertan varios
+              // widgets en la lista solo cuando existe texto.
               if (subtitle != null) ...[
                 const SizedBox(height: 5),
                 Text(subtitle!, style: const TextStyle(color: Colors.black54, fontSize: 15)),
               ],
               const SizedBox(height: 22),
+              // Inserta las tarjetas específicas de cada página.
               ...children,
             ],
           ),
@@ -132,8 +155,10 @@ class PageBody extends StatelessWidget {
       );
 }
 
+/// Resumen académico y accesos rápidos de la pantalla principal.
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key, required this.onNavigate});
+  // Función recibida desde CampusShell para cambiar la pestaña activa.
   final ValueChanged<int> onNavigate;
 
   @override
@@ -171,6 +196,7 @@ class DashboardPage extends StatelessWidget {
       );
 }
 
+/// Título pequeño para separar grupos de información.
 class SectionTitle extends StatelessWidget {
   const SectionTitle(this.text, {super.key});
   final String text;
@@ -181,6 +207,7 @@ class SectionTitle extends StatelessWidget {
       );
 }
 
+/// Tarjeta pulsable usada por los accesos rápidos del inicio.
 class QuickAction extends StatelessWidget {
   const QuickAction({super.key, required this.icon, required this.label, required this.onTap});
   final IconData icon;
@@ -199,6 +226,8 @@ class QuickAction extends StatelessWidget {
       );
 }
 
+/// Tarjeta compartida por clases, tareas, eventos y avisos.
+/// Si onTap es null, es informativa; si existe, abre otra pantalla.
 class InfoCard extends StatelessWidget {
   const InfoCard({super.key, required this.icon, required this.title, required this.detail, this.onTap, this.trailing});
   final IconData icon;
@@ -213,12 +242,14 @@ class InfoCard extends StatelessWidget {
           leading: CircleAvatar(backgroundColor: const Color(0xFFE9EEFF), child: Icon(icon, color: blue)),
           title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
           subtitle: Padding(padding: const EdgeInsets.only(top: 4), child: Text(detail)),
+          // La flecha aparece cuando hay una acción de apertura.
           trailing: trailing ?? (onTap == null ? null : const Icon(Icons.chevron_right)),
           onTap: onTap,
         ),
       );
 }
 
+/// Horario fijo de ejemplo agrupado por día. Aún no consulta un servidor.
 class SchedulePage extends StatelessWidget {
   const SchedulePage({super.key});
   @override
@@ -235,6 +266,8 @@ class SchedulePage extends StatelessWidget {
       );
 }
 
+/// Modelo simple de datos para mostrar una tarea o un evento.
+/// La misma estructura permite reutilizar la pantalla de detalle.
 class CampusItem {
   const CampusItem(this.title, this.subtitle, this.description, this.icon);
   final String title;
@@ -243,6 +276,7 @@ class CampusItem {
   final IconData icon;
 }
 
+// Datos ficticios del taller. Son const porque no se editan durante la sesión.
 const tasks = [
   CampusItem('Wireframe de aplicación', 'Diseño de interfaces · Entrega: viernes',
       'Diseña cinco pantallas de baja fidelidad con navegación, títulos y acciones claras.', Icons.draw_outlined),
@@ -250,6 +284,7 @@ const tasks = [
       'Implementa el frontend con datos ficticios y verifica la navegación en Android.', Icons.code),
 ];
 
+// Estos eventos usan el mismo modelo que las tareas.
 const events = [
   CampusItem('Feria de proyectos', 'Viernes · Auditorio principal',
       'Conoce los proyectos desarrollados por estudiantes y presenta tus ideas.', Icons.groups_outlined),
@@ -257,17 +292,22 @@ const events = [
       'Encuentro abierto sobre hábitos saludables y vida universitaria.', Icons.favorite_outline),
 ];
 
+/// Añade la pantalla de detalle sobre la pantalla actual.
+/// Navigator conserva la página anterior para que Atrás regrese a la lista.
 void openDetail(BuildContext context, CampusItem item, String category) {
   Navigator.of(context).push(MaterialPageRoute(
     builder: (_) => DetailPage(item: item, category: category),
   ));
 }
 
+/// Convierte cada tarea en una tarjeta que abre su detalle.
 class TasksPage extends StatelessWidget {
   const TasksPage({super.key});
   @override
   Widget build(BuildContext context) => PageBody(
         title: 'Tareas', subtitle: 'Actividades pendientes',
+        // Si la lista queda vacía, se muestra un mensaje claro en lugar
+        // de una pantalla sin contenido (requerimiento RF08).
         children: tasks.isEmpty
             ? const [EmptyState(message: 'No tienes tareas pendientes')]
             : tasks.map((item) => InfoCard(
@@ -277,6 +317,7 @@ class TasksPage extends StatelessWidget {
       );
 }
 
+/// Lista de eventos con la misma interacción de las tareas.
 class EventsPage extends StatelessWidget {
   const EventsPage({super.key});
   @override
@@ -291,6 +332,7 @@ class EventsPage extends StatelessWidget {
       );
 }
 
+/// Mensaje reutilizable para una lista sin elementos.
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key, required this.message});
   final String message;
@@ -305,6 +347,8 @@ class EmptyState extends StatelessWidget {
       );
 }
 
+/// Muestra toda la información del elemento elegido en la lista.
+/// Recibe item y category por el constructor, sin consultar datos externos.
 class DetailPage extends StatelessWidget {
   const DetailPage({super.key, required this.item, required this.category});
   final CampusItem item;
